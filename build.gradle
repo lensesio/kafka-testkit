@@ -5,7 +5,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
-        classpath 'com.github.maiflai:gradle-scalatest:0.9'
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
         classpath 'net.researchgate:gradle-release:2.3.4'
     }
@@ -14,7 +13,6 @@ buildscript {
 ext {
     scalaMajorVersion = '2.11'
     junit = '4.12'
-    scalaLoggingVersion = '2.1.2'
     kafkaVersion = '0.10.0.0'
     curatorVersion = '2.9.0'
     zkclientVersion = '0.7'
@@ -27,9 +25,7 @@ apply plugin: 'net.researchgate.release'
 
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'scala'
     apply plugin: 'maven'
-    apply plugin: "com.github.maiflai.scalatest"
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'com.datamountaineer'
@@ -43,18 +39,9 @@ allprojects {
         maven { url "http://repo.maven.apache.org/maven2" }
         maven { url "http://packages.confluent.io/maven/" }
     }
-
-//    configurations.all {
-//        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-//            if (details.requested.name == 'log4j') {
-//                details.useTarget "org.slf4j:slf4j-api:$slf4jVersion"
-//            }
-//        }
-//    }
 }
 
 dependencies {
-    compile "com.typesafe.scala-logging:scala-logging-slf4j_$scalaMajorVersion:$scalaLoggingVersion"
     compile "junit:junit:$junit"
     compile "com.101tec:zkclient:$zkclientVersion"
     compile "org.apache.kafka:kafka_$scalaMajorVersion:$kafkaVersion"
@@ -63,9 +50,6 @@ dependencies {
     compile "io.confluent:kafka-schema-registry:$confluentVersion"
 }
 
-//sourceSets.main.java.srcDirs = []
-//sourceSets.test.java.srcDirs = []
-
 test {
     maxParallelForks = 1
     minHeapSize '256m'
@@ -73,56 +57,22 @@ test {
     systemProperty "log4j.configuration","${projectDir}/test/resources/log4j.properties"
 }
 
-task testJar(type: Jar, dependsOn: testClasses) {
-    baseName = "test-${project.archivesBaseName}"
-    from sourceSets.test.output
-}
-
-configurations {
-    tests
-}
-
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-
-task scaladocJar(type: Jar) {
-    classifier = 'scaladoc'
-    from '../LICENSE'
-    from scaladoc
-}
-
 artifacts {
-    archives javadocJar, scaladocJar, sourcesJar
+    archives sourcesJar
 }
 
-tasks.withType(Tar) {
-    compression Compression.GZIP
-    extension = 'tgz'
-}
-
-task compile(dependsOn: 'compileScala')
-task fatJar(dependsOn : ['test', 'shadowJar', 'makeCli'])
-task fatJarNoTest(dependsOn : 'shadowJar')
+task fatJar(dependsOn : 'shadowJar')
 
 println "Building ${name}-${version}"
 
 signing {
     required { gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
-}
-
-tasks.withType(Jar) {
-    manifest {
-        attributes 'Main-Class': 'com.datamountaineer.connect.tools.Cli'
-    }
 }
 
 if (project.hasProperty('release')) {
@@ -142,12 +92,12 @@ if (project.hasProperty('release')) {
                     name project.name
                     description project.description
                     packaging 'jar'
-                    url 'https://github.com/datamountaineer/kafka-connect-tools'
+                    url 'https://github.com/datamountaineer/kafka-testkit'
 
                     scm {
-                        connection 'scm:git:https://github.com/datamountaineer/kafka-connect-tools.git'
-                        developerConnection 'scm:git:git@github.com:datamountaineer/kafka-connect-tools.git'
-                        url 'https://github.com/datamountaineer/kafka-connect-tools.git'
+                        connection 'scm:git:https://github.com/datamountaineer/kafka-testkit.git'
+                        developerConnection 'scm:git:git@github.com:datamountaineer/kafka-testkit.git'
+                        url 'https://github.com/datamountaineer/kafka-testkit.git'
                     }
 
                     licenses {
@@ -169,13 +119,17 @@ if (project.hasProperty('release')) {
                             name = 'Roel'
                             email = 'rollulus@xs4all.nl'
                         }
+                        developer {
+                            id = 'johnhofman'
+                            name = 'John'
+                            email = 'johncarlhofman@gmail.com'
+                        }
                     }
                 }
             }
 
         }
     }
-
 }
 
 nexusStaging {
