@@ -1,4 +1,6 @@
-# Kafka Testkit
+# Kafka Testkit 
+
+[![Build Status](https://travis-ci.org/datamountaineer/kafka-testkit.svg?branch=master)](https://travis-ci.org/datamountaineer/kafka-testkit)
 
 This bundles various kafka test utilities that are not published to maven repositories.
 
