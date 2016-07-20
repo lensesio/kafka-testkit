@@ -1,4 +1,4 @@
-package io.confluent.examples.streams.zookeeper;
+package com.datamountaineer.zookeeper;
 
 import org.apache.curator.test.TestingServer;
 import org.slf4j.Logger;

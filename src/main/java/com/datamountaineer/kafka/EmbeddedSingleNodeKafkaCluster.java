@@ -1,5 +1,7 @@
-package io.confluent.examples.streams.kafka;
+package com.datamountaineer.kafka;
 
+import com.datamountaineer.kafka.schemaregistry.RestApp;
+import com.datamountaineer.zookeeper.ZooKeeperEmbedded;
 import org.apache.curator.test.InstanceSpec;
 import org.junit.rules.ExternalResource;
 import org.slf4j.Logger;
@@ -8,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Properties;
 
-import io.confluent.kafka.schemaregistry.RestApp;
-import io.confluent.examples.streams.zookeeper.ZooKeeperEmbedded;
 import io.confluent.kafka.schemaregistry.avro.AvroCompatibilityLevel;
 import kafka.server.KafkaConfig$;
 
@@ -66,6 +66,10 @@ public class EmbeddedSingleNodeKafkaCluster extends ExternalResource {
         zookeeperConnect(),
         KAFKA_SCHEMAS_TOPIC, AVRO_COMPATIBILITY_TYPE);
     schemaRegistry.start();
+  }
+
+  public RestApp getSchemaRegistry()  {
+    return schemaRegistry;
   }
 
   private Properties effectiveBrokerConfigFrom(Properties brokerConfig, ZooKeeperEmbedded zookeeper) {
