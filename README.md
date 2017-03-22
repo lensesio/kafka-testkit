@@ -16,6 +16,7 @@ Components are sources from:
 
 | Version | Confluent Version |
 | ------- | ----------------- |
+|0.5|3.2.0|
 |0.4|3.1.1|
 |0.1|3.0.0|
 
@@ -25,12 +26,12 @@ Components are sources from:
 <dependency>
 	<groupId>com.datamountaineer</groupId>
 	<artifactId>kafka-testkit</artifactId>
-	<version>0.4</version>
+	<version>0.5</version>
 </dependency>
 
 #sbt
-libraryDependencies += "com.datamountaineer" % "kafka-testkit" % "0.4"
+libraryDependencies += "com.datamountaineer" % "kafka-testkit" % "0.5"
 
 #gradle
-'com.datamountaineer:kafka-testkit:0.4'
+'com.datamountaineer:kafka-testkit:0.5'
 ```
