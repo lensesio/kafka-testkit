@@ -13,10 +13,10 @@ buildscript {
 ext {
     scalaMajorVersion = '2.11'
     junit = '4.12'
-    kafkaVersion = '0.11.0.0'
+    kafkaVersion = '1.0.0'
     curatorVersion = '2.9.0'
     zkclientVersion = '0.7'
-    confluentVersion = '3.3.0'
+    confluentVersion = '4.0.0'
 }
 
 apply plugin: 'signing'
